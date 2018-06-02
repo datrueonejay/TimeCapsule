@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:time_capsule/Database/DatabaseClient.dart';
 import 'dart:async';
 
 import 'package:time_capsule/Models/TimeCapsule.dart';
+import 'package:time_capsule/Repositories/TimeCapsuleRespository.dart';
 
 class NewTimeCapsule extends StatefulWidget {
   @override
@@ -10,12 +12,21 @@ class NewTimeCapsule extends StatefulWidget {
 
 class _NewTimeCapsuleState extends State<NewTimeCapsule> {
 
+  DatabaseClient _db = new DatabaseClient();
+  TimeCapsuleRepository _timeCapsuleRepo;
   DateTime _date = new DateTime.now();
   TimeOfDay _time = new TimeOfDay.now();
   DateTime openDate = new DateTime.now();
   DateAsString openDateAsString = new DateAsString(new DateTime.now());
   final titleTextController = new TextEditingController();
   final messageTextController = new TextEditingController();
+
+  @override
+  void initState() async {
+    super.initState();
+    await _db.create();
+    _timeCapsuleRepo = new TimeCapsuleRepository(_db.db);
+  }
 
   @override
   void dispose() {
@@ -136,10 +147,10 @@ class _NewTimeCapsuleState extends State<NewTimeCapsule> {
     }
     else {
       TimeCapsule capsule = new TimeCapsule();
-      capsule.openDate = openDate;
-      capsule.createdDate = new DateTime.now();
-      capsule.isDeleted = false;
-      capsule.isOpened = false;
+      capsule.openDate = openDate.toUtc().toIso8601String();
+      capsule.createdDate = new DateTime.now().toUtc().toIso8601String();
+      capsule.isDeleted = 0;
+      capsule.isOpened = 0;
       capsule.message = messageTextController.text;
       capsule.title = titleTextController.text;
       Scaffold.of(context).showSnackBar(new SnackBar(content: new Text("Time capsule created successfully.")));
