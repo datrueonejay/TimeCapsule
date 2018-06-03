@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:time_capsule/Controllers/TimeCapsuleController.dart';
 import 'package:time_capsule/Database/DatabaseClient.dart';
 import 'dart:async';
 
@@ -14,6 +15,7 @@ class _NewTimeCapsuleState extends State<NewTimeCapsule> {
 
   DatabaseClient _db = new DatabaseClient();
   TimeCapsuleRepository _timeCapsuleRepo;
+  TimeCapsuleController _timeCapsuleController;
   DateTime _date = new DateTime.now();
   TimeOfDay _time = new TimeOfDay.now();
   DateTime openDate = new DateTime.now();
@@ -22,10 +24,15 @@ class _NewTimeCapsuleState extends State<NewTimeCapsule> {
   final messageTextController = new TextEditingController();
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
+    _initDb();
+  }
+
+  _initDb() async {
     await _db.create();
     _timeCapsuleRepo = new TimeCapsuleRepository(_db.db);
+    _timeCapsuleController = new TimeCapsuleController(_timeCapsuleRepo);
   }
 
   @override
@@ -141,19 +148,20 @@ class _NewTimeCapsuleState extends State<NewTimeCapsule> {
     );
   }
 
-  void _createNewTimeCapsule(BuildContext context){
+  void _createNewTimeCapsule(BuildContext context) async {
     if (messageTextController.text.isEmpty || titleTextController.text.isEmpty) {
       Scaffold.of(context).showSnackBar(new SnackBar(content: new Text("Ensure all fields are filled in and try again.")));
     }
     else {
       TimeCapsule capsule = new TimeCapsule();
-      capsule.openDate = openDate.toUtc().toIso8601String();
-      capsule.createdDate = new DateTime.now().toUtc().toIso8601String();
-      capsule.isDeleted = 0;
-      capsule.isOpened = 0;
+      capsule.openDate = openDate;
+      capsule.createdDate = new DateTime.now();
+      capsule.isDeleted = false;
+      capsule.isOpened = false;
       capsule.message = messageTextController.text;
       capsule.title = titleTextController.text;
-      Scaffold.of(context).showSnackBar(new SnackBar(content: new Text("Time capsule created successfully.")));
+      await _timeCapsuleController.insertTimeCapsule(capsule);
+      Navigator.pop(context);
     }
 
   }
