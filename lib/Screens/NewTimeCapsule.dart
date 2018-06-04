@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:time_capsule/Controllers/TimeCapsuleController.dart';
-import 'package:time_capsule/Database/DatabaseClient.dart';
 import 'dart:async';
 
 import 'package:time_capsule/Models/TimeCapsule.dart';
@@ -13,8 +12,6 @@ class NewTimeCapsule extends StatefulWidget {
 
 class _NewTimeCapsuleState extends State<NewTimeCapsule> {
 
-  DatabaseClient _db = new DatabaseClient();
-  TimeCapsuleRepository _timeCapsuleRepo;
   TimeCapsuleController _timeCapsuleController;
   DateTime _date = new DateTime.now();
   TimeOfDay _time = new TimeOfDay.now();
@@ -26,13 +23,7 @@ class _NewTimeCapsuleState extends State<NewTimeCapsule> {
   @override
   void initState() {
     super.initState();
-    _initDb();
-  }
-
-  _initDb() async {
-    await _db.create();
-    _timeCapsuleRepo = new TimeCapsuleRepository(_db.db);
-    _timeCapsuleController = new TimeCapsuleController(_timeCapsuleRepo);
+    _timeCapsuleController = new TimeCapsuleController();
   }
 
   @override

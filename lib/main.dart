@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:time_capsule/Controllers/TimeCapsuleController.dart';
+import 'package:time_capsule/Models/TimeCapsule.dart';
 import 'package:time_capsule/Screens/NewTimeCapsule.dart';
 
 void main() => runApp(new MyApp());
@@ -26,13 +28,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  TimeCapsuleController _timeCapsuleController;
+  List<TimeCapsule> _timeCapsules = new List<TimeCapsule>();
+
+
+  @override
+  void initState() {
+    _timeCapsuleController = new TimeCapsuleController();
+    _timeCapsuleController.getAllCapsules()
+        .then((capsules) {
+          setState(() {
+            _timeCapsules = capsules;
+          });
+        });
+    super.initState();
+
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -40,20 +53,31 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
-      body: new Center(
-        child: new Text(
-          "Click the button to create a new time capsule."
-        ),
+      body: new ListView.builder(
+          padding: new EdgeInsets.all(20.0),
+          itemCount: _timeCapsules.length,
+          itemBuilder: (context, index) {
+            return new ListTile(
+                title: new Text("${_timeCapsules[index].title}"),
+                subtitle: new Text("${_timeCapsules[index].message}"),
+            );
+          }
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context, new MaterialPageRoute(builder: (context) =>
-          new NewTimeCapsule()),
-          );
-        },
-        tooltip: 'Increment',
+        onPressed: _goToNewTimeCapsulePage,
         child: new Icon(Icons.add),
       ),
     );
+  }
+
+  _goToNewTimeCapsulePage() async {
+    await Navigator.push(context, new MaterialPageRoute(builder: (context) =>
+      new NewTimeCapsule()),
+    );
+    _timeCapsuleController.getAllCapsules().then((capsules) {
+      setState(() {
+        _timeCapsules = capsules;
+      });
+    });
   }
 }

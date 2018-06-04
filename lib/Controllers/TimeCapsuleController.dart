@@ -6,27 +6,23 @@ import 'package:time_capsule/Repositories/TimeCapsuleRespository.dart';
 
 class TimeCapsuleController {
 
-  TimeCapsuleRepository _timeCapsuleRepo;
-
-  TimeCapsuleController(this._timeCapsuleRepo);
-
   Future<int> insertTimeCapsule(TimeCapsule timeCapsule) async {
-    timeCapsule.id = await _timeCapsuleRepo.insertTimeCapsule(_toDbModel(timeCapsule));
+    timeCapsule.id = await TimeCapsuleRepository.get().insertTimeCapsule(_toDbModel(timeCapsule));
     return timeCapsule.id;
   }
 
   setIsOpened(TimeCapsule timeCapsule) async {
     timeCapsule.isOpened = true;
-    await _timeCapsuleRepo.updateTimeCapsule(_toDbModel(timeCapsule));
+    await TimeCapsuleRepository.get().updateTimeCapsule(_toDbModel(timeCapsule));
   }
 
   setIsDeleted(TimeCapsule timeCapsule) async {
     timeCapsule.isOpened = true;
-    await _timeCapsuleRepo.updateTimeCapsule(_toDbModel(timeCapsule));
+    await TimeCapsuleRepository.get().updateTimeCapsule(_toDbModel(timeCapsule));
   }
 
   Future<List<TimeCapsule>> getUnopenedCapsules() async {
-    List<TimeCapsuleDb> dbCapsules = await _timeCapsuleRepo.getAllTimeCapsules();
+    List<TimeCapsuleDb> dbCapsules = await TimeCapsuleRepository.get().getAllTimeCapsules();
     List<TimeCapsule> timeCapsules = new List<TimeCapsule>();
 
     dbCapsules.forEach((dbCapsule) {
@@ -39,7 +35,7 @@ class TimeCapsuleController {
   }
 
   Future<List<TimeCapsule>> getAllCapsules() async {
-    List<TimeCapsuleDb> dbCapsules = await _timeCapsuleRepo.getAllTimeCapsules();
+    List<TimeCapsuleDb> dbCapsules = await TimeCapsuleRepository.get().getAllTimeCapsules();
     List<TimeCapsule> timeCapsules = new List<TimeCapsule>();
 
     dbCapsules.forEach((dbCapsule) {

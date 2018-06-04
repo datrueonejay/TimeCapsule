@@ -8,7 +8,7 @@ class TimeCapsuleDb {
   int isOpened;
   int isDeleted;
 
-  static final columns = ["id", "title", "message", "createDate", "openDate",
+  static final columns = ["id", "title", "message", "createdDate", "openDate",
   "isOpened", "isDeleted"];
 
   Map toMap() {
