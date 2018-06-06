@@ -10,11 +10,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Time Capsule',
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new MyHomePage(title: 'Flutter Demo Home Page'),
+      home: new MyHomePage(title: "Time Capsule"),
     );
   }
 }
@@ -29,9 +29,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  int _currPage = 0;
+  PageController _pageController;
   TimeCapsuleController _timeCapsuleController;
   List<TimeCapsule> _timeCapsules = new List<TimeCapsule>();
-
 
   @override
   void initState() {
@@ -42,30 +43,97 @@ class _MyHomePageState extends State<MyHomePage> {
             _timeCapsules = capsules;
           });
         });
-    super.initState();
+    _pageController = new PageController();
 
+    super.initState();
   }
 
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
+        actions: <Widget>[
+          IconButton(
+            icon: new Icon(Icons.add_circle),
+            onPressed: _goToNewTimeCapsulePage,
+          ),
+        ],
       ),
-      body: new ListView.builder(
-          padding: new EdgeInsets.all(20.0),
-          itemCount: _timeCapsules.length,
-          itemBuilder: (context, index) {
-            return new ListTile(
-                title: new Text("${_timeCapsules[index].title}"),
-                subtitle: new Text("${_timeCapsules[index].message}"),
-            );
-          }
+      body: new PageView(
+        onPageChanged: (pageNum) {
+          setState(() {
+            _currPage = pageNum;
+          });
+        },
+        children: [
+          new Container(
+            child: new ListView.builder(
+              padding: new EdgeInsets.all(20.0),
+              itemCount: _timeCapsules.length,
+              itemBuilder: (context, index) {
+                return new ListTile(
+                  title: new Text("${_timeCapsules[index].title}"),
+                  subtitle: new Text("${_timeCapsules[index].message}"),
+                );
+              }
+            ),
+          ),
+          new Container(
+            child: new ListView.builder(
+                padding: new EdgeInsets.all(20.0),
+                itemCount: _timeCapsules.length,
+                itemBuilder: (context, index) {
+                  return new ListTile(
+                    title: new Text("${_timeCapsules[index].title}"),
+                    subtitle: new Text("${_timeCapsules[index].message}"),
+                  );
+                }
+            ),
+          ),
+          new Container(
+            child: new ListView.builder(
+                padding: new EdgeInsets.all(20.0),
+                itemCount: _timeCapsules.length,
+                itemBuilder: (context, index) {
+                  return new ListTile(
+                    title: new Text("${_timeCapsules[index].title}"),
+                    subtitle: new Text("${_timeCapsules[index].message}"),
+                  );
+                }
+            ),
+          ),
+              ],
+        controller: _pageController,
       ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: _goToNewTimeCapsulePage,
-        child: new Icon(Icons.add),
+      bottomNavigationBar: new BottomNavigationBar(
+        items: [
+          new BottomNavigationBarItem(
+              icon: new Icon(Icons.title),
+              title: new Text("All Time Capsules")
+          ),
+          new BottomNavigationBarItem(
+              icon: new Icon(Icons.title),
+              title: new Text("Coming Soon Time Capsules")
+          ),
+          new BottomNavigationBarItem(
+              icon: new Icon(Icons.title),
+              title: new Text("Opened Time Capsules")
+          ),
+        ],
+        currentIndex: _currPage,
+        onTap: (pageNum) {
+          _pageController.animateToPage(pageNum,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.ease);
+        },
+
       ),
     );
   }
