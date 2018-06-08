@@ -33,6 +33,9 @@ class _MyHomePageState extends State<MyHomePage> {
   PageController _pageController;
   TimeCapsuleController _timeCapsuleController;
   List<TimeCapsule> _timeCapsules = new List<TimeCapsule>();
+  List<TimeCapsule> _nearCapsules = new List<TimeCapsule>();
+  List<TimeCapsule> _openedCapsules = new List<TimeCapsule>();
+
 
   @override
   void initState() {
@@ -43,6 +46,18 @@ class _MyHomePageState extends State<MyHomePage> {
             _timeCapsules = capsules;
           });
         });
+    _timeCapsuleController.getTimeCapsulesBefore(new DateTime.now().add(new Duration(days: 10)))
+        .then((capsules) {
+      setState(() {
+        _nearCapsules = capsules;
+      });
+    });
+    _timeCapsuleController.getOpenedCapsules()
+      .then((capsules) {
+        setState(() {
+          _openedCapsules = capsules;
+        });
+    });
     _pageController = new PageController();
 
     super.initState();
@@ -80,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
               itemBuilder: (context, index) {
                 return new ListTile(
                   title: new Text("${_timeCapsules[index].title}"),
-                  subtitle: new Text("${_timeCapsules[index].message}"),
+                  subtitle: new Text("${_timeCapsules[index].openDate.toIso8601String()}"),
                 );
               }
             ),
@@ -88,11 +103,11 @@ class _MyHomePageState extends State<MyHomePage> {
           new Container(
             child: new ListView.builder(
                 padding: new EdgeInsets.all(20.0),
-                itemCount: _timeCapsules.length,
+                itemCount: _nearCapsules.length,
                 itemBuilder: (context, index) {
                   return new ListTile(
-                    title: new Text("${_timeCapsules[index].title}"),
-                    subtitle: new Text("${_timeCapsules[index].message}"),
+                    title: new Text("${_nearCapsules[index].title}"),
+                    subtitle: new Text("${_nearCapsules[index].openDate.toIso8601String()}"),
                   );
                 }
             ),
@@ -100,11 +115,11 @@ class _MyHomePageState extends State<MyHomePage> {
           new Container(
             child: new ListView.builder(
                 padding: new EdgeInsets.all(20.0),
-                itemCount: _timeCapsules.length,
+                itemCount: _openedCapsules.length,
                 itemBuilder: (context, index) {
                   return new ListTile(
-                    title: new Text("${_timeCapsules[index].title}"),
-                    subtitle: new Text("${_timeCapsules[index].message}"),
+                    title: new Text("${_openedCapsules[index].title}"),
+                    subtitle: new Text("${_openedCapsules[index].openDate.toIso8601String()}"),
                   );
                 }
             ),
@@ -116,15 +131,15 @@ class _MyHomePageState extends State<MyHomePage> {
         items: [
           new BottomNavigationBarItem(
               icon: new Icon(Icons.title),
-              title: new Text("All Time Capsules")
+              title: new Text("All")
           ),
           new BottomNavigationBarItem(
               icon: new Icon(Icons.title),
-              title: new Text("Coming Soon Time Capsules")
+              title: new Text("Soon")
           ),
           new BottomNavigationBarItem(
               icon: new Icon(Icons.title),
-              title: new Text("Opened Time Capsules")
+              title: new Text("Opened")
           ),
         ],
         currentIndex: _currPage,

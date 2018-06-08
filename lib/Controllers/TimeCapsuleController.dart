@@ -21,15 +21,18 @@ class TimeCapsuleController {
     await TimeCapsuleRepository.get().updateTimeCapsule(_toDbModel(timeCapsule));
   }
 
-  Future<List<TimeCapsule>> getUnopenedCapsules() async {
+  Future<List<TimeCapsule>> getOpenedCapsules() async {
     List<TimeCapsuleDb> dbCapsules = await TimeCapsuleRepository.get().getAllTimeCapsules();
     List<TimeCapsule> timeCapsules = new List<TimeCapsule>();
 
     dbCapsules.forEach((dbCapsule) {
       TimeCapsule currCapsule = _toTimeCapsuleModel(dbCapsule);
-      if (!currCapsule.isDeleted && !currCapsule.isOpened) {
+      if (!currCapsule.isDeleted && currCapsule.isOpened) {
         timeCapsules.add(currCapsule);
       }
+    });
+    timeCapsules.sort((capsuleOne, capsuleTwo) {
+      return capsuleOne.openDate.compareTo(capsuleTwo.openDate);
     });
     return timeCapsules;
   }
@@ -44,7 +47,27 @@ class TimeCapsuleController {
         timeCapsules.add(currCapsule);
       }
     });
+    timeCapsules.sort((capsuleOne, capsuleTwo) {
+      return capsuleOne.openDate.compareTo(capsuleTwo.openDate);
+    });
     return timeCapsules;
+  }
+
+  Future<List<TimeCapsule>> getTimeCapsulesBefore(DateTime beforeDate) async {
+    List<TimeCapsuleDb> dbCapsules = await TimeCapsuleRepository.get().getAllTimeCapsules();
+    List<TimeCapsule> timeCapsules = new List<TimeCapsule>();
+
+    dbCapsules.forEach((dbCapsule) {
+      TimeCapsule currCapsule = _toTimeCapsuleModel(dbCapsule);
+      if (!currCapsule.isDeleted && currCapsule.openDate.isBefore(beforeDate)) {
+        return timeCapsules.add(currCapsule);
+      }
+    });
+    timeCapsules.sort((capsuleOne, capsuleTwo) {
+      return capsuleOne.openDate.compareTo(capsuleTwo.openDate);
+    });
+    return timeCapsules;
+
   }
 
   TimeCapsuleDb _toDbModel(TimeCapsule timeCapsule) {

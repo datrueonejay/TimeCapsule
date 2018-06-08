@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:synchronized/synchronized.dart';
 import 'package:time_capsule/Constants/DatabaseConstants.dart';
 import 'package:time_capsule/Models/TimeCapsuleDb.dart';
 
@@ -13,13 +14,15 @@ class TimeCapsuleRepository {
   Database _db;
   static final TimeCapsuleRepository _timeCapsuleRepo =
     new TimeCapsuleRepository._internal();
-  bool _didInit = false;
-
+  final _lock = new Lock();
 
   Future<Database> _getDb() async {
-    if (!_didInit) {
-      await create();
-      _didInit = true;
+    if (_db == null) {
+      await _lock.synchronized(() async{
+          if (_db == null) {
+            await create();
+          }
+      });
     }
     return _db;
   }
