@@ -28,7 +28,7 @@ class TimeCapsuleRepository {
   }
 
   static TimeCapsuleRepository get() {
-    return _timeCapsuleRepo;
+    return  _timeCapsuleRepo;
   }
 
   Future create() async {

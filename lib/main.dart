@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:time_capsule/Controllers/TimeCapsuleController.dart';
 import 'package:time_capsule/Models/TimeCapsule.dart';
 import 'package:time_capsule/Screens/NewTimeCapsule.dart';
+import 'package:time_capsule/Utils/TimeCapsuleListItem.dart';
 
 void main() => runApp(new MyApp());
 
@@ -34,7 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
   TimeCapsuleController _timeCapsuleController;
   List<TimeCapsule> _timeCapsules = new List<TimeCapsule>();
   List<TimeCapsule> _nearCapsules = new List<TimeCapsule>();
-  List<TimeCapsule> _openedCapsules = new List<TimeCapsule>();
+  List<TimeCapsule> _readyCapsules = new List<TimeCapsule>();
 
 
   @override
@@ -52,10 +53,10 @@ class _MyHomePageState extends State<MyHomePage> {
         _nearCapsules = capsules;
       });
     });
-    _timeCapsuleController.getOpenedCapsules()
+    _timeCapsuleController.getReadyCapsules()
       .then((capsules) {
         setState(() {
-          _openedCapsules = capsules;
+          _readyCapsules = capsules;
         });
     });
     _pageController = new PageController();
@@ -93,11 +94,21 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: new EdgeInsets.all(20.0),
               itemCount: _timeCapsules.length,
               itemBuilder: (context, index) {
-                return new ListTile(
-                  title: new Text("${_timeCapsules[index].title}"),
-                  subtitle: new Text("${_timeCapsules[index].openDate.toIso8601String()}"),
-                );
+//                return new ListTile(
+//                  title: new Text("${_timeCapsules[index].title}"),
+//                  subtitle: new Text("${_timeCapsules[index].openDate.toIso8601String()}"),
+//                );
+                return new TimeCapsuleListItem(_timeCapsules[index]);
               }
+            ),
+          ),
+          new Container(
+            child: new ListView.builder(
+                padding: new EdgeInsets.all(20.0),
+                itemCount: _readyCapsules.length,
+                itemBuilder: (context, index) {
+                  return new TimeCapsuleListItem(_readyCapsules[index]);
+                }
             ),
           ),
           new Container(
@@ -105,22 +116,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 padding: new EdgeInsets.all(20.0),
                 itemCount: _nearCapsules.length,
                 itemBuilder: (context, index) {
-                  return new ListTile(
-                    title: new Text("${_nearCapsules[index].title}"),
-                    subtitle: new Text("${_nearCapsules[index].openDate.toIso8601String()}"),
-                  );
-                }
-            ),
-          ),
-          new Container(
-            child: new ListView.builder(
-                padding: new EdgeInsets.all(20.0),
-                itemCount: _openedCapsules.length,
-                itemBuilder: (context, index) {
-                  return new ListTile(
-                    title: new Text("${_openedCapsules[index].title}"),
-                    subtitle: new Text("${_openedCapsules[index].openDate.toIso8601String()}"),
-                  );
+//                  return new ListTile(
+//                    title: new Text("${_openedCapsules[index].title}"),
+//                    subtitle: new Text("${_openedCapsules[index].openDate.toIso8601String()}"),
+//                  );
+                  return new TimeCapsuleListItem(_nearCapsules[index]);
                 }
             ),
           ),
@@ -135,11 +135,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           new BottomNavigationBarItem(
               icon: new Icon(Icons.title),
-              title: new Text("Soon")
+              title: new Text("Ready To Open")
           ),
           new BottomNavigationBarItem(
               icon: new Icon(Icons.title),
-              title: new Text("Opened")
+              title: new Text("Soon")
           ),
         ],
         currentIndex: _currPage,

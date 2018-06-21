@@ -21,13 +21,13 @@ class TimeCapsuleController {
     await TimeCapsuleRepository.get().updateTimeCapsule(_toDbModel(timeCapsule));
   }
 
-  Future<List<TimeCapsule>> getOpenedCapsules() async {
+  Future<List<TimeCapsule>> getReadyCapsules() async {
     List<TimeCapsuleDb> dbCapsules = await TimeCapsuleRepository.get().getAllTimeCapsules();
     List<TimeCapsule> timeCapsules = new List<TimeCapsule>();
 
     dbCapsules.forEach((dbCapsule) {
       TimeCapsule currCapsule = _toTimeCapsuleModel(dbCapsule);
-      if (!currCapsule.isDeleted && currCapsule.isOpened) {
+      if (!currCapsule.isDeleted && !currCapsule.isOpened && currCapsule.openDate.isBefore(DateTime.now())) {
         timeCapsules.add(currCapsule);
       }
     });
@@ -59,8 +59,11 @@ class TimeCapsuleController {
 
     dbCapsules.forEach((dbCapsule) {
       TimeCapsule currCapsule = _toTimeCapsuleModel(dbCapsule);
-      if (!currCapsule.isDeleted && currCapsule.openDate.isBefore(beforeDate)) {
-        return timeCapsules.add(currCapsule);
+      // date for today
+      DateTime today = DateTime.now();
+      today = DateTime(today.year, today.month, today.day, 0, 0, 0, 0, 0);
+      if (!currCapsule.isDeleted && currCapsule.openDate.isBefore(beforeDate) && currCapsule.openDate.isAfter(today)) {
+        timeCapsules.add(currCapsule);
       }
     });
     timeCapsules.sort((capsuleOne, capsuleTwo) {

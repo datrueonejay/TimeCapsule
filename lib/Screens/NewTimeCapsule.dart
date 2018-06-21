@@ -14,7 +14,6 @@ class _NewTimeCapsuleState extends State<NewTimeCapsule> {
 
   TimeCapsuleController _timeCapsuleController;
   DateTime _date = new DateTime.now();
-  TimeOfDay _time = new TimeOfDay.now();
   DateTime openDate = new DateTime.now();
   DateAsString openDateAsString = new DateAsString(new DateTime.now());
   final titleTextController = new TextEditingController();
@@ -54,9 +53,10 @@ class _NewTimeCapsuleState extends State<NewTimeCapsule> {
 
   Future<Null> _selectTime(BuildContext context) async {
     final TimeOfDay timePicked = await showTimePicker(context: context,
-        initialTime: _time);
+        initialTime: new TimeOfDay.fromDateTime(openDate));
 
-    if (timePicked != null)
+    if (timePicked != null && new DateTime(openDate.year, openDate.month, openDate.day,
+        timePicked.hour, timePicked.minute).isAfter(DateTime.now()))
       {
         setState(() {
           openDate = new DateTime(openDate.year, openDate.month, openDate.day,
@@ -146,7 +146,7 @@ class _NewTimeCapsuleState extends State<NewTimeCapsule> {
     else {
       TimeCapsule capsule = new TimeCapsule();
       capsule.openDate = openDate;
-      capsule.createdDate = new DateTime.now();
+      capsule.createdDate =  new DateTime.now();
       capsule.isDeleted = false;
       capsule.isOpened = false;
       capsule.message = messageTextController.text;
