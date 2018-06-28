@@ -24,15 +24,37 @@ class _TimeCapsuleListItemState extends State<TimeCapsuleListItem> {
   @override
   Widget build(BuildContext context) {
     return new Container(
-      child: new Column(
-        children: <Widget>[
-          new Text(_timeCapsule.title,
-            textAlign: TextAlign.start),
-          new Text("Created on ${_timeCapsule.createdDate.toString()}"),
-          new Text("Can open on ${_timeCapsule.openDate.toString()}"),
-          new Text("${DateTime.now().toString()}")
-        ],
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: new GestureDetector(
+        child: new Column(
+          children: <Widget>[
+            new Text(_timeCapsule.title,
+                textAlign: TextAlign.start),
+            new Text("Created on ${_timeCapsule.createdDate.toString()}"),
+            new Text("Can open on ${_timeCapsule.openDate.toString()}"),
+            new Text("${DateTime.now().toString()}")
+          ],
+          crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        onTap: () {
+          if (_timeCapsule.openDate.isAfter(DateTime.now()))
+            {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return new AlertDialog(
+                    title: Text("Not Yet"),
+                    content: new Text("You can not open this yet"),
+                    actions: <Widget>[
+                      new FlatButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: new Text("OK"),
+                      )
+                    ],
+                  );
+                }
+              );
+            }
+        },
       ),
       padding: new EdgeInsets.all(20.0),
     );

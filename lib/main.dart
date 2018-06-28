@@ -116,8 +116,6 @@ class _MyHomePageState extends State<MyHomePage> {
     DateTime curr = dateHeaders[currDateIndex];
     DateTime capsule = timeCapsules[currCapsuleIndex].openDate;
     Duration a = capsule.difference(curr);
-    int b = capsule.difference(curr).inDays;
-    int c = a.inDays;
     if (timeCapsules[currCapsuleIndex].openDate.difference(dateHeaders[currDateIndex]).inDays >= 1) {
       // This case is if we need to return the next date header
       return dateHeaders[currDateIndex + 1];
