@@ -62,7 +62,7 @@ class TimeCapsuleController {
       // date for today
       DateTime today = DateTime.now();
       today = DateTime(today.year, today.month, today.day, 0, 0, 0, 0, 0);
-      if (!currCapsule.isDeleted && currCapsule.openDate.isBefore(beforeDate) && currCapsule.openDate.isAfter(today)) {
+      if (!currCapsule.isDeleted && currCapsule.openDate.isBefore(beforeDate) && currCapsule.openDate.isAfter(today) && !currCapsule.isOpened) {
         timeCapsules.add(currCapsule);
       }
     });
@@ -75,6 +75,7 @@ class TimeCapsuleController {
 
   TimeCapsuleDb _toDbModel(TimeCapsule timeCapsule) {
     TimeCapsuleDb dbModel = new TimeCapsuleDb();
+    dbModel.id = timeCapsule.id;
     dbModel.title = timeCapsule.title;
     dbModel.message = timeCapsule.message;
     dbModel.createdDate = timeCapsule.createdDate.toUtc().toIso8601String();
