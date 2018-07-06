@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:time_capsule/Models/TimeCapsule.dart';
 import 'package:time_capsule/Repositories/TimeCapsuleRespository.dart';
+import 'package:time_capsule/Utils/Converter.dart';
 
 class NewTimeCapsule extends StatefulWidget {
   @override
@@ -15,7 +16,7 @@ class _NewTimeCapsuleState extends State<NewTimeCapsule> {
   TimeCapsuleController _timeCapsuleController;
   DateTime _date = new DateTime.now();
   DateTime openDate = new DateTime.now();
-  DateAsString openDateAsString = new DateAsString(new DateTime.now());
+  String openDateAsString = Converter.dateToString(new DateTime.now());
   final titleTextController = new TextEditingController();
   final messageTextController = new TextEditingController();
 
@@ -46,7 +47,7 @@ class _NewTimeCapsuleState extends State<NewTimeCapsule> {
         setState(() {
           openDate = new DateTime(picked.year, picked.month, picked.day,
             openDate.hour, openDate.minute);
-          openDateAsString = new DateAsString(openDate);
+          openDateAsString = Converter.dateToString(openDate);
         });
       }
   }
@@ -61,7 +62,7 @@ class _NewTimeCapsuleState extends State<NewTimeCapsule> {
         setState(() {
           openDate = new DateTime(openDate.year, openDate.month, openDate.day,
             timePicked.hour, timePicked.minute);
-          openDateAsString = new DateAsString(openDate);
+          openDateAsString = Converter.dateToString(openDate);
         });
       }
   }
@@ -106,9 +107,10 @@ class _NewTimeCapsuleState extends State<NewTimeCapsule> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           new Text(
-                            "Open date is set to ${openDateAsString.month} "
-                                + "${openDateAsString.day}, ${openDateAsString.year}, "
-                                + "at ${openDateAsString.time}",
+//                            "Open date is set to ${openDateAsString.month} "
+//                                + "${openDateAsString.day}, ${openDateAsString.year}, "
+//                                + "at ${openDateAsString.time}",
+                            "Open date is set to $openDateAsString",
                             textAlign: TextAlign.start,
                           ),
                         ],
@@ -158,20 +160,20 @@ class _NewTimeCapsuleState extends State<NewTimeCapsule> {
   }
 }
 
-class DateAsString{
-  List<String> _months = const ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.",
-    "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."];
-  String year;
-  String month;
-  String day;
-  String time;
-
-  DateAsString(DateTime date) {
-    this.year = date.year.toString();
-    this.month  = _months[date.month];
-    this.day = date.day.toString();
-    time = date.hour > 12 ? (date.hour - 12).toString() : date.hour.toString();
-    time += ":${date.minute} ";
-    time += date.hour > 12 ? "PM" : "AM";
-  }
-}
+//class DateAsString{
+//  List<String> _months = const ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.",
+//    "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."];
+//  String year;
+//  String month;
+//  String day;
+//  String time;
+//
+//  DateAsString(DateTime date) {
+//    this.year = date.year.toString();
+//    this.month  = _months[date.month];
+//    this.day = date.day.toString();
+//    time = date.hour > 12 ? (date.hour - 12).toString() : date.hour.toString();
+//    time += ":${date.minute} ";
+//    time += date.hour > 12 ? "PM" : "AM";
+//  }
+//}

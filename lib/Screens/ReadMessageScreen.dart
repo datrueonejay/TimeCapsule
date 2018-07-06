@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:time_capsule/Models/TimeCapsule.dart';
+import 'package:time_capsule/Utils/Converter.dart';
 
 
 class ReadMessageScreen extends StatelessWidget {
@@ -26,7 +27,7 @@ class ReadMessageScreen extends StatelessWidget {
                 ),
                 new Padding(
                   padding: new EdgeInsets.all(20.0),
-                  child: new Text("Created On: ${_timeCapsule.createdDate.toString()}"),
+                  child: new Text("Created On: ${Converter.dateToString(_timeCapsule.createdDate)}"),
                 ),
                 new Padding(
                   padding: new EdgeInsets.all(20.0),

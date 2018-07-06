@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:time_capsule/Controllers/TimeCapsuleController.dart';
 import 'package:time_capsule/Models/TimeCapsule.dart';
-import 'package:time_capsule/Screens/NewTimeCapsule.dart';
+import 'package:time_capsule/Screens/NewTimeCapsuleScreen.dart';
+import 'package:time_capsule/Utils/Converter.dart';
 import 'package:time_capsule/Utils/TimeCapsuleListItem.dart';
 
 void main() => runApp(new MyApp());
@@ -80,11 +81,15 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           new Container(
             child: new ListView.builder(
-              padding: new EdgeInsets.all(20.0),
               itemCount: _allCapsulesList.length,
               itemBuilder: (context, index) {
                 if (_allCapsulesList[index] is DateTime) {
-                  return Text(_allCapsulesList[index].toString());
+                  return new Container(
+                    padding: new EdgeInsets.only(left: 5.0, top: 20.0, right: 20.0, bottom: 20.0),
+                    child: Text(Converter.dateToHeader(_allCapsulesList[index]),
+                    style: new TextStyle(color: Colors.white),),
+                    color: Colors.blue,
+                  );
                 } else {
                   return new TimeCapsuleListItem(_allCapsulesList[index], _timeCapsuleController, _refreshcapsules);
                 }
@@ -93,12 +98,15 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           new Container(
             child: new ListView.builder(
-              padding: new EdgeInsets.all(20.0),
               itemCount: _readyCapsulesList.length,
               itemBuilder: (context, index) {
-                var i = _readyCapsulesList[index];
                 if (_readyCapsulesList[index] is DateTime) {
-                  return Text(_readyCapsulesList[index].toString());
+                  return new Container(
+                    padding: new EdgeInsets.only(left: 5.0, top: 20.0, right: 20.0, bottom: 20.0),
+                    child: Text(Converter.dateToHeader(_readyCapsulesList[index]),
+                      style: new TextStyle(color: Colors.white),),
+                    color: Colors.blue,
+                  );
                 } else {
 
                   return new TimeCapsuleListItem(_readyCapsulesList[index], _timeCapsuleController, _refreshcapsules);
@@ -108,11 +116,15 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           new Container(
             child: new ListView.builder(
-              padding: new EdgeInsets.all(20.0),
               itemCount: _nearCapsulesList.length,
               itemBuilder: (context, index) {
                 if (_nearCapsulesList[index] is DateTime) {
-                  return Text(_nearCapsulesList[index].toString());
+                  return new Container(
+                    padding: new EdgeInsets.only(left: 5.0, top: 20.0, right: 20.0, bottom: 20.0),
+                    child: Text(Converter.dateToHeader(_nearCapsulesList[index]),
+                      style: new TextStyle(color: Colors.white),),
+                    color: Colors.blue,
+                  );
                 } else {
                   return new TimeCapsuleListItem(_nearCapsulesList[index], _timeCapsuleController, _refreshcapsules);
                 }
@@ -125,15 +137,15 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: new BottomNavigationBar(
         items: [
           new BottomNavigationBarItem(
-              icon: new Icon(Icons.title),
+              icon: new Icon(Icons.all_inclusive),
               title: new Text("All")
           ),
           new BottomNavigationBarItem(
-              icon: new Icon(Icons.title),
+              icon: new Icon(Icons.check_circle),
               title: new Text("Ready To Open")
           ),
           new BottomNavigationBarItem(
-              icon: new Icon(Icons.title),
+              icon: new Icon(Icons.access_time),
               title: new Text("Soon")
           ),
         ],
